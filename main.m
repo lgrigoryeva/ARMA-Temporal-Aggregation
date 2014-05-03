@@ -1,3 +1,9 @@
+% this file is the main file which is used to launch the 
+% evaluation of total and characteristic errors for ARMA 
+% temporally aggregated processes. The body contains a simple example 
+% of how to use the code.
+
+
 clear;
 
 % set up the ARMA coefficients
