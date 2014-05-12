@@ -1,4 +1,6 @@
-function [ autocov ] = getAutocovar(AR, MA, h, precision, MA_el)
+function  autocov  = getAutocovar(AR, MA, h, precision, MA_el)
+% Provides the autocovariance function of an ARMA model up to lag h
+% precision sets the tolerance accepted in the use of the AR infinity representation
     if MA_el < h
         MA_el = h;
     end

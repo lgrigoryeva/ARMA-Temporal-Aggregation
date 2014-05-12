@@ -1,4 +1,12 @@
-function [ifGood] = checkCoeffRoots(AR, MA, allowedValue, checkZeros)
+function ifGood = checkCoeffRoots(AR, MA, allowedValue, checkZeros)
+% This function checks for causality and invertibility of the ARMA model
+% under consideration; it returns 1 if ARMA model passed the check and 0 -
+% otherwise
+
+% checkZeros flag is set to 1 if the check for zeros roots in the AR and MA 
+% polynomials is required, otherwise this flag is set to 0
+
+% allowedValue sets the highest allowed bound for the roots
 
     roots_AR = roots([1; -AR(:)]);
     roots_MA = roots([1; MA(:)]);

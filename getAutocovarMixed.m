@@ -1,4 +1,6 @@
 function [ gamma_array ] = getAutocovarMixed(AR, MA, precision, MA_el)
+% This function is used in the function getAsymptMLEcovar for computing the
+% (1,2),(2,1) blocks of SIGMA_beta, see page 7 of Paper 2
     p = length(AR);
     q = length(MA);
     [Psi_p, Psi_q] = getAutocovMixedRecur(AR, MA, max(p, q), precision, MA_el);

@@ -1,4 +1,7 @@
 function [Psi_p, Psi_q ] = getAutocovMixedRecur(AR, MA, h, precision, MA_el)
+% This function is used in the function getAsymptMLEcovar for computing the
+% (1,2),(2,1) blocks of SIGMA_beta in a recursive way, see page 7 of Paper 2
+
     if MA_el < h
         MA_el = h;
     end

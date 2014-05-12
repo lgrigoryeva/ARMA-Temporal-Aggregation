@@ -1,5 +1,5 @@
-function [totalMSFE_da, totalMSFE_ta, totalMSFE_ta_opt, ...
-    charactMSFE_da, charactMSFE_ta, charactMSFE_ta_opt, optSteps] = ...
+function [totalMSFE_AD, totalMSFE_H, totalMSFE_OH, ...
+    charactMSFE_AD, charactMSFE_H, charactMSFE_OH, optSteps] = ...
                 getTheoreticalTotalError(AR, MA, sigma2, aggrType, tStart, ...
                                     tEnd, tStep, hStart, hEnd, hStep, pathLength, numTrials, P_cut)    
     startMinValue = 10e6;
@@ -317,12 +317,12 @@ function [totalMSFE_da, totalMSFE_ta, totalMSFE_ta_opt, ...
         end
     end
     
-    totalMSFE_ta = repmat(theorMSFE_ta', tNum, 1) + erCorrec_ta_GOlutkepohl;
-    totalMSFE_da = repmat(theorMSFE_da, tNum, 1) + erCorrec_da_GOlutkepohl;
-    totalMSFE_ta_opt = totalOptError;
-    charactMSFE_ta = theorMSFE_ta';
-    charactMSFE_da = theorMSFE_da;
-    charactMSFE_ta_opt = theorMSFE_ta_opt;
+    totalMSFE_H = repmat(theorMSFE_ta', tNum, 1) + erCorrec_ta_GOlutkepohl;
+    totalMSFE_AD = repmat(theorMSFE_da, tNum, 1) + erCorrec_da_GOlutkepohl;
+    totalMSFE_OH = totalOptError;
+    charactMSFE_H = theorMSFE_ta';
+    charactMSFE_AD = theorMSFE_da;
+    charactMSFE_OH = theorMSFE_ta_opt;
 end
 
     
