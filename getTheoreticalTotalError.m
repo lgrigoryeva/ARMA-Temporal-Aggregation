@@ -225,7 +225,7 @@ function [totalMSFE_AD, totalMSFE_H, totalMSFE_OH, ...
     
     estimMSFE_H = zeros(tNum, hNum);
 
-    parfor t = 1:tNum
+    for t = 1:tNum
         tLength = (t - 1) * tStep + tStart;
         estimMSFE_H_h = zeros(hNum, 1);
         for h = 1:hNum
