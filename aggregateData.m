@@ -1,4 +1,4 @@
-function [aggr_sample] = aggregateData(aggr_type, period_TA, sample)
+function [aggr_sample] = aggregateData(aggrType, period_TA, sample)
 % stock and flow aggregation of a sample with a prescribed period
 
     if (period_TA == 1)
@@ -10,7 +10,7 @@ function [aggr_sample] = aggregateData(aggr_type, period_TA, sample)
     [T, N] = size(sample);
     sample = flipud(sample);
     
-    if strcmp('stock', aggr_type)
+    if strcmp('stock', aggrType)
         aggr_sample = zeros(idivide(int16(T - 1), period_TA) + 1, N);
         for ii = 1:N
             

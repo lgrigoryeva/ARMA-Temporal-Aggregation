@@ -1,4 +1,10 @@
 function [series, epsilons] = simulateARMA(AR, MA, sigma2, T, N)
+% This function generates N time series sample of length T according to
+% model ARMA with coefficients given in AR and MA input parameters,
+% respectively
+
+% All the entries of time series sample up to max(p, q) are filled with
+% zeros
     
     p = length(AR);
     q = length(MA);

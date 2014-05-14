@@ -1,6 +1,20 @@
-function [msfeEstim] = getEstimationErrorDaTa(Psi, sigma2, covPsiPiMatrix, w, P_cut, T_sample, P_max)
-    
+function estimMSFE = getEstimationErrorDaTa(Psi, sigma2, covPsiPiMatrix, w, P_cut, T, P_max)
+% This function evaluates the estimation error associated to the
+% (1)all-disaggregated, (2)all-aggregated, or (3)hybrid forecasting schemes, respectively, 
+% for (1): see Equation (2.18) of Paper 1 for D, F, G in the body of this function;
+% for (2): see square bracket in Equation (2.20) of Paper 1;
+% for (3): see square bracket in Equation (2.13) of Paper 1.
 
+% w - is the aggregation vector
+% for (1):
+% in the case of stock aggregation w contains zero-valued elements up to index K, 
+% which is the aggregation period, and for which w(K) = 1
+% in the case of flow aggregation w contains K one-valued elements;
+% for (2) and (3): 
+% set w = 1.
+
+% sigma2 - unconditional variance of the noise
+% Psi - the parameters of the MA-representation of considered ARMA model
     Psi = Psi(2:end);
     
     K = length(w);
@@ -24,7 +38,7 @@ function [msfeEstim] = getEstimationErrorDaTa(Psi, sigma2, covPsiPiMatrix, w, P_
         end
         D(h, :) = temp_ar;
     end
-    D = 1/T_sample * ((D + D') - diag(diag(D)));
+    D = 1/T * ((D + D') - diag(diag(D)));
     
     
     F = zeros(K);    
@@ -53,7 +67,7 @@ function [msfeEstim] = getEstimationErrorDaTa(Psi, sigma2, covPsiPiMatrix, w, P_
             F(h, hh) = s1;
         end
     end    
-    F = F * 2 / T_sample;
+    F = F * 2 / T;
     
     G = zeros(K);
     for h = 1:K
@@ -92,8 +106,8 @@ function [msfeEstim] = getEstimationErrorDaTa(Psi, sigma2, covPsiPiMatrix, w, P_
         end
         G(h, :) = temp_ar;
     end
-    G = 1 / T_sample * ((G + G') - diag(diag(G)));
+    G = 1 / T * ((G + G') - diag(diag(G)));
 
-    msfeEstim = sigma2 * w * (F + D + G) * w';
+    estimMSFE = sigma2 * w * (F + D + G) * w';
         
 end

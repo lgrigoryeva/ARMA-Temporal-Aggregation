@@ -1,19 +1,22 @@
 function [psiJac, piJac] = getJacobianPsiPi(AR, MA, Psi, Pi, P_max)
 
+% This function computes the Jacobian J_{XI_P} (see statement of Theorem 4.1 of Paper 1)
+% psiJac, piJac - contain the corresponding blocks of the Jacobian
+
+
     p = length(AR);
     q = length(MA);
-    r = max(p, q);
-
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     AR_lag = LagOp([1; -AR(:)]);
-    MA_lag = LagOp([1; MA(:)]);
-
     
     dpsi_theta = zeros(q, length(Psi));
     for i = 1:q
         M = zeros(length(Psi), 1);
         M(i + 1) = 1;
         Psi_lag = LagOp([M]);
-        temp = cell2mat(toCellArray(mrdivide_my(Psi_lag, AR_lag, 'Degree', P_max, 'RelTol', 1e-20,'Window',2000, 'AbsTol', 1e-20)));
+        temp = cell2mat(toCellArray(mrdivide_my(Psi_lag, AR_lag, 'Degree', ...
+            P_max, 'RelTol', 1e-20,'Window', 2000, 'AbsTol', 1e-20)));
         
         differ_size = length(Psi)-length(temp);
         if differ_size > 0
@@ -32,7 +35,8 @@ function [psiJac, piJac] = getJacobianPsiPi(AR, MA, Psi, Pi, P_max)
         temp1 = S * Psi';
         Psi_lag = LagOp([temp1(1:end)]);
         
-        temp = cell2mat(toCellArray(mrdivide_my(Psi_lag, AR_lag, 'Degree', P_max, 'RelTol', 1e-20,'Window',2000, 'AbsTol', 1e-20)));
+        temp = cell2mat(toCellArray(mrdivide_my(Psi_lag, AR_lag, 'Degree', ...
+            P_max, 'RelTol', 1e-20, 'Window', 2000, 'AbsTol', 1e-20)));
         
         differ_size = length(Psi)-length(temp);
         if differ_size > 0
@@ -49,7 +53,6 @@ function [psiJac, piJac] = getJacobianPsiPi(AR, MA, Psi, Pi, P_max)
     
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    AR_lag = LagOp([1; -AR(:)]);
     MA_lag = LagOp([1; MA(:)], 'Tolerance', 1e-30);
   
     
@@ -58,7 +61,8 @@ function [psiJac, piJac] = getJacobianPsiPi(AR, MA, Psi, Pi, P_max)
         M = zeros(length(Pi), 1);
         M(i + 1) = -1;
         Pi_lag = LagOp([M]);
-        temp = cell2mat(toCellArray(mrdivide_my(Pi_lag, MA_lag, 'Degree', P_max, 'Window',2000, 'RelTol', 1e-20, 'AbsTol', 1e-20)));
+        temp = cell2mat(toCellArray(mrdivide_my(Pi_lag, MA_lag, 'Degree', ...
+            P_max, 'Window', 2000, 'RelTol', 1e-20, 'AbsTol', 1e-20)));
         
         differ_size = length(Pi)-length(temp);
         if differ_size > 0
@@ -77,7 +81,8 @@ function [psiJac, piJac] = getJacobianPsiPi(AR, MA, Psi, Pi, P_max)
         temp1 = -S * Pi';
         Pi_lag = LagOp([temp1(1:end)], 'Tolerance', 1e-30);
         
-        temp = cell2mat(toCellArray(mrdivide_my(Pi_lag, MA_lag, 'Degree', P_max, 'Window', 2000, 'RelTol', 1e-20, 'AbsTol', 1e-20)));
+        temp = cell2mat(toCellArray(mrdivide_my(Pi_lag, MA_lag, 'Degree', ...
+            P_max, 'Window', 2000, 'RelTol', 1e-20, 'AbsTol', 1e-20)));
         
         differ_size = length(Pi)-length(temp);
         if differ_size > 0
@@ -91,9 +96,6 @@ function [psiJac, piJac] = getJacobianPsiPi(AR, MA, Psi, Pi, P_max)
     end
 
     piJac = [dpi_phi' dpi_theta'];
-    
-    
-    
     
 end
 

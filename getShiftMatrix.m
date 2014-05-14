@@ -1,4 +1,6 @@
 function S_k = getShiftMatrix(n, shift)
+% This function produces the lower-shift matrix S_k of dimension n x n
+% with the given shift value (see page 11 of Paper 2)
 
     S_k = zeros(n);
     

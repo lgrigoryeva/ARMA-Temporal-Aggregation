@@ -12,7 +12,7 @@ function [ f ] = aggregationEquationMA(x, q_star, period_TA, C_L, dC_L, Theta_st
     
     [~, n] = size(C_L);
     
-    dTheta_star_B = zeros(q_star + 1, 1);
+    dTheta_star_B = [];
     dTheta_star_B(1) = 0;
     
     k = 2;

@@ -1,9 +1,9 @@
-function F = getAggrPolynomsDeriv(x, AR, params_TA, period_TA, aggr_type, index)
+function F = getAggrPolynomsDeriv(x, AR, params_TA, period_TA, aggrType, index)
 % It sets up Equation (2.25) in Paper 2
 
     p = length(AR);    
     l = 0;
-    if strcmp(aggr_type, 'flow')
+    if strcmp(aggrType, 'flow')
         A = zeros((1 + p) * period_TA, 1 + p);
         B = zeros((1 + p) * period_TA, 1 + p);
         for i = 1:(1 + p) * period_TA

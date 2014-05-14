@@ -1,5 +1,18 @@
-function [structInitCond] = getInitialConditionsTA(AR, MA, sigma2, freq_TA, pathLength, aggrType, numTrials)
+function structInitCond = getInitialConditionsTA(AR, MA, sigma2, period_TA, pathLength, aggrType, numTrials)
     
+% This function generates initial values for the nonlinear system which
+% has to be solved in order to obtain the coefficients of the new
+% temporally aggregated ARMA model (see Equation (2.14) of Paper 2 for example)
+
+% In order to obtain the initial values we generate a sample of length
+% pathLength, aggregate it according to a given aggregation type "stock" or
+% "flow" given in aggr_type, and subsequently fit an ARMA(p,q*) model to
+% it, where q* is the order of MA part of the new aggregated model.
+
+% If the outcome of this procedure gives the ARMA(p,q*) model which is not
+% causal or invertible, we repeat this procedure by enlarging pathLength by
+% pathLength=pathLength*2 and as many times as given by numTrials
+
     p = length(AR);
     q = length(MA);
     
@@ -14,12 +27,12 @@ function [structInitCond] = getInitialConditionsTA(AR, MA, sigma2, freq_TA, path
     while j <= numTrials
 
         if strcmp(aggrType, 'flow')
-            q_new = idivide(int16((p + 1) * (freq_TA - 1) + q), freq_TA);
+            q_new = idivide(int16((p + 1) * (period_TA - 1) + q), period_TA);
         else
-            q_new = idivide(int16(p * (freq_TA - 1) + q), freq_TA);
+            q_new = idivide(int16(p * (period_TA - 1) + q), period_TA);
         end
         simSeries = simulateARMA(AR, MA, sigma2, pathLength, 1);
-        aggrSimSeries = aggregateData(aggrType, freq_TA, simSeries);
+        aggrSimSeries = aggregateData(aggrType, period_TA, simSeries);
         SpecFit = garchset('VarianceModel', 'Constant', 'R', double(p), 'M', double(q_new), 'Display', 'Off');
         CoeffFit = garchfit(SpecFit, aggrSimSeries(:, 1));
         
@@ -30,8 +43,13 @@ function [structInitCond] = getInitialConditionsTA(AR, MA, sigma2, freq_TA, path
         if ~(isfield(CoeffFit, 'AR') && p)
             CoeffFit.AR = 0;
         end
-        
-        [AR_ta, MA_ta] = temporalAggregation(p, q, CoeffARMA, freq_TA, aggrType, CoeffFit);
+        if strcmp(aggrType, 'stock')
+            w = zeros(period_TA, 1);
+            w(end) = 1;
+        else
+            w = ones(period_TA, 1);
+        end
+        [AR_ta, MA_ta] = temporalAggregation(p, q, CoeffARMA, w, CoeffFit);
         
         roots_AR_ta = roots([1; -AR_ta(:)]);
         roots_MA_ta = roots([1; MA_ta(:)]);
